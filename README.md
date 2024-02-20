@@ -1,7 +1,4 @@
-# Sign language Translator 
-
-Objective:
-The goal of this group project is to develop an sign language real time translator using machine learning techniques. Each group member will contribute to the project by implementing and fine-tuning different aspects of the image classification pipeline.
+# Customer churn
 
 # Workflow:
 
