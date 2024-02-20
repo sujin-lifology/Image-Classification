@@ -1,1 +1,1 @@
-# Image classification model
+# Customer Churn Prediction
