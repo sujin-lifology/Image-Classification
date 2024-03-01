@@ -6,3 +6,10 @@ from sklearn.preprocessing import Normalizer
 from sklearn.model_selection import GridSearchCV
 
 # Importing the dataset
+rawfile = "https://raw.githubusercontent.com/AbdulMoaizz/dataset/main/telecom_customer_churn.csv"
+
+# Read the CSV file into a DataFrame
+rf = pd.read_csv(rawfile)
+
+# Display the DataFrame
+print(rf)
