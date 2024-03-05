@@ -39,6 +39,9 @@ df_encoded = pd.get_dummies(df, columns=list(categorical_columns), drop_first=Tr
 x = df_encoded.drop(['Customer Status'], axis=1).copy()
 y = df_encoded['Customer Status']
 
+print(y)
+
+"""
 # Splitting Data
 x_train, x_test, y_train, y_test = tts(x, y, train_size=0.8, random_state=100)
 
@@ -60,3 +63,4 @@ rf_test_r2 = r2_score(y_test, y_test_p)
 print("Test Predictions:")
 print(y_test_p)
 
+"""
