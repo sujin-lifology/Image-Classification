@@ -67,3 +67,50 @@ churn_dataset.describe()
 # Mean value of normal customers and churn customers
 churn_dataset.groupby('Customer Status').mean()
 
+# seperating data to train
+X_churn_data = churn_dataset.drop(columns = 'Customer Status', axis = 1)
+Y_churn_data = churn_dataset['Customer Status']
+
+# Standardization of data
+scaler = StandardScaler()
+scaler.fit(X_churn_data)
+
+standardized_X_data = scaler.transform(X_churn_data)
+
+X_churn_data = standardized_X_data
+
+X_training,X_testing,Y_training,Y_testing =  train_test_split(X_churn_data,Y_churn_data,test_size = 0.2, stratify=Y_churn_data, random_state=2)
+
+# Model training
+classifier = svm.SVC(kernel='linear')
+
+#training SVM Classifier
+classifier.fit(X_training, Y_training)
+
+# checking accuracy score for churn training data
+X_churn_training_prediction = classifier.predict(X_training)
+training_churn_data_accuracy = accuracy_score(X_churn_training_prediction, Y_training)
+
+print('Accuracy score for traininig churn data : ', training_churn_data_accuracy)
+
+# checking accuracy score for churn testing data
+X_churn_testing_prediction = classifier.predict(X_testing)
+testing_churn_data_accuracy = accuracy_score(X_churn_testing_prediction, Y_testing)
+
+print('Accuracy score for testing churn data : ', testing_churn_data_accuracy)
+
+# Predictive model
+
+test_churn = (50,0,0,92627,0,4,1,0.0,1,30.0,1.0,0.0,0.0,0.0,0.0,1.0,1,73.9,280.85,134.6,415.45)
+#numpy array
+test_churn_numpy_array = np.asarray(test_churn)
+# reshaping the array
+test_churn_reshaped = test_churn_numpy_array.reshape(1,-1)
+# standardizing
+std_churn = scaler.transform(test_churn_reshaped)
+predicting_churn = classifier.predict(std_churn)
+
+if (predicting_churn[0] == 1):
+  print('Customer is Churn')
+else:
+  print('Customer is not Churn')
