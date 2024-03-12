@@ -2,10 +2,11 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split as tts
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import mean_squared_error, r2_score, confusion_matrix, roc_curve, auc
+
+from sklearn.metrics import mean_squared_error, r2_score, confusion_matrix, accuracy_score
 
 # Importing the dataset
 datafile = "https://raw.githubusercontent.com/AbdulMoaizz/dataset/main/telecom_customer_churn.csv"
@@ -14,7 +15,7 @@ datafile = "https://raw.githubusercontent.com/AbdulMoaizz/dataset/main/telecom_c
 df = pd.read_csv(datafile)
 
 # Drop unnecessary columns and rows
-df = df.drop(['Zip Code','Latitude','Longitude','Number of Referrals','Phone Service'], axis=1)
+df = df.drop(['Zip Code', 'Latitude', 'Longitude', 'Number of Referrals', 'Phone Service'], axis=1)
 df = df[df['Customer Status'] != 'Joined']
 
 # Fill missing values
@@ -23,14 +24,14 @@ df['Avg Monthly Long Distance Charges'] = df['Avg Monthly Long Distance Charges'
 df['Multiple Lines'] = df['Multiple Lines'].fillna('No')
 df['Internet Type'] = df['Internet Type'].fillna('4G')
 df['Avg Monthly GB Download'] = df['Avg Monthly GB Download'].fillna(np.random.randint(10, 30))
-df[['Online Security','Online Backup'
-    ,'Device Protection Plan','Premium Tech Support'
-    ,'Streaming TV','Streaming Movies'
-    ,'Streaming Music','Unlimited Data'
-    ]] = df[['Online Security','Online Backup'
-             ,'Device Protection Plan','Premium Tech Support'
-             ,'Streaming TV','Streaming Movies'
-             ,'Streaming Music','Unlimited Data'
+df[['Online Security', 'Online Backup',
+    'Device Protection Plan', 'Premium Tech Support',
+    'Streaming TV', 'Streaming Movies',
+    'Streaming Music', 'Unlimited Data'
+    ]] = df[['Online Security', 'Online Backup',
+             'Device Protection Plan', 'Premium Tech Support',
+             'Streaming TV', 'Streaming Movies',
+             'Streaming Music', 'Unlimited Data'
              ]].fillna('No')
 df['Churn Category'] = df['Churn Category'].fillna('Stayed')
 df['Churn Reason'] = df['Churn Reason'].fillna('Still Active')
@@ -46,12 +47,11 @@ df_encoded = pd.get_dummies(df, columns=list(categorical_columns), drop_first=Tr
 
 # Getting the dependent column
 y = df_encoded['Customer Status']
-
 # Getting the independent columns
 x = df_encoded.drop(['Customer Status'], axis=1).copy()
 
 # Splitting Data
-x_train, x_test, y_train, y_test = tts(x, y, train_size=0.8, random_state=100)
+x_train, x_test, y_train, y_test = tts(x, y, train_size=0.8, test_size=0.2, random_state=100)
 
 # Training the model
 rf = RandomForestClassifier(max_depth=20, random_state=100)
@@ -68,8 +68,22 @@ rf_train_r2 = r2_score(y_train, y_train_p)
 rf_test_mse = mean_squared_error(y_test, y_test_p)
 rf_test_r2 = r2_score(y_test, y_test_p)
 
+print(f'Training Set MSE: {rf_train_mse}')
+print(f'Training Set r2: {rf_train_r2}')
+print(f'Testing Set MSE: {rf_test_mse}')
+print(f'Testing Set r2: {rf_test_r2}')
+
+# Calculate accuracy for training and testing set
+accuracy_train = accuracy_score(y_train, y_train_p)
+accuracy_test = accuracy_score(y_test, y_test_p)
+
+print(f'Training Set Accuracy: {accuracy_train:.4f}')
+print(f'Testing Set Accuracy: {accuracy_test:.4f}')
+
 # Confusion Matrix
 cm = confusion_matrix(y_train, y_train_p)
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Stayed', 'Churned'], yticklabels=['Stayed', 'Churned'])
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['Stayed', 'Churned'],
+            yticklabels=['Stayed', 'Churned'])
 plt.title('Confusion Matrix')
 plt.show()
