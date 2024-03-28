@@ -6,7 +6,7 @@ from sklearn import svm
 from sklearn.metrics import accuracy_score
 
 # Dataset
-churn_dataset = pd.read_csv('/content/telecom_customer_churn.csv')
+churn_dataset = pd.read_csv("https://raw.githubusercontent.com/AbdulMoaizz/dataset/main/telecom_customer_churn.csv")
 
 # Deleting unwanted rows
 churn_dataset = churn_dataset[churn_dataset['Customer Status'] != 'Joined']
